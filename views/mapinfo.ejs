@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  <head>
+    <h1><%= title %></h1>
+  </head>
+  <div role="main">
+    <p><%= content %></p>
+    <form action="/mapinfo" method="post">
+    </form>
+    
+    <br>
+
+  </div>
+  <div id="my_map" style="width: 600px; height: 600px"></div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBu1EOlT2wxzTFhpjmoiEMA2EI_9mNCxA&callback=initMapWithAddress" async defer></script>
+
+  <script>
+    function initMapWithAddress() {
+    var opts = {
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+    };
+    var my_google_map = new google.maps.Map(document.getElementById('my_map'), opts);
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      {
+        'address': my_address,
+        'region': 'jp'
+      },
+      function(result, status){
+        if(status==google.maps.GeocoderStatus.OK){
+            var latlng = result[0].geometry.location;
+            my_google_map.setCenter(latlng);
+            var marker = new google.maps.Marker({position:latlng, map:my_google_map, title:latlng.toString(), draggable:true});
+            google.maps.event.addListener(marker, 'dragend', function(event){
+                marker.setTitle(event.latLng.toString());
+            });
+
+        }
+      }
+    );
+  }
+</script>
+  <div id="google_map" style="width: 600px; height: 600px"></div>
+
+
+</body>
+
+</html>

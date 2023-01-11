@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+    <p></p>
+
+    <form action="#" method="get" id="form">
+      <input type="search" name="content" placeholder="半角数字のみ" pattern="\d{3}-?\d{4}" maxlength="8" minlength="7" required >
+      <input type="submit" value="検索">
+    </form>
+    <p>入力された数値</p>
+    <p id="output"></p>
+
+    <div id="my_map" style="width: 600px; height: 600px"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBu1EOlT2wxzTFhpjmoiEMA2EI_9mNCxA" async defer></script>
+  </script>
+
+  </body>
+
+  <script>
+    // submit時にイベント実行をする関数
+    document.getElementById('form').onsubmit = function (event) {
+        // 再読み込み防止
+        event.preventDefault();
+        // 入力フォームの内容を取得
+        let inputForm = document.getElementById('form').content.value;
+		// 入力内容を画面に出力
+        document.getElementById('output').textContent = `${inputForm}`;
+
+    function initMapWithAddress() {
+
+    var opts = {
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+    };
+    var my_google_map = new google.maps.Map(document.getElementById('my_map'), opts);
+    var geocoder = new google.maps.Geocoder();
+    var params={'address': inputForm}
+        console.log(params);
+    geocoder.geocode(
+      params,
+      function(result, status){
+        console.log(status);
+        if(status==google.maps.GeocoderStatus.OK){
+            var latlng = result[0].geometry.location;
+            my_google_map.setCenter(latlng);
+            var marker = new google.maps.Marker({position:latlng, map:my_google_map, title:latlng.toString(), draggable:true});
+            google.maps.event.addListener(marker, 'dragend', function(event){
+                marker.setTitle(event.latLng.toString());
+            });
+
+        }
+      }
+    );
+  }
+console.log(hello);
+  initMapWithAddress();
+
+    }
+</script>
+
+
+
+
+</html>
